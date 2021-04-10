@@ -82,7 +82,7 @@ for dirname in os.listdir(input_folder):
         real_labels.append(label_real)
         filepath = os.path.join(subfolder, filename)
         sampling_freq, audio = wavfile.read(filepath)
-        mfcc_features = mfcc(audio, sampling_freq)
+        mfcc_features = mfcc(audio, sampling_freq, nfft=1024)
         max_score = -9999999999999999999
         output_label = None
         for item in hmm_models:
