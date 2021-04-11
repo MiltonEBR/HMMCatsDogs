@@ -50,9 +50,10 @@ for dirname in os.listdir(input_folder):
     for filename in [x for x in os.listdir(subfolder) if x.endswith('.wav')]:
         # Read the input file
         filepath = os.path.join(subfolder, filename)
+        print(filepath)
         sampling_freq, audio = wavfile.read(filepath)
         # Extract MFCC features
-        mfcc_features = mfcc(audio, sampling_freq)
+        mfcc_features = mfcc(audio, sampling_freq, nfft=2400)
         # Append to the variable X
         if len(X) == 0:
             X = mfcc_features
@@ -82,7 +83,7 @@ for dirname in os.listdir(input_folder):
         real_labels.append(label_real)
         filepath = os.path.join(subfolder, filename)
         sampling_freq, audio = wavfile.read(filepath)
-        mfcc_features = mfcc(audio, sampling_freq, nfft=1024)
+        mfcc_features = mfcc(audio, sampling_freq, nfft=2400)
         max_score = -9999999999999999999
         output_label = None
         for item in hmm_models:
