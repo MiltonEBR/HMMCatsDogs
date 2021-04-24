@@ -1,3 +1,15 @@
+# Based on the following project: https://blog.goodaudience.com/music-genre-classification-using-hidden-markov-models-4a7f14eb0fd4
+
+"""
+MADE BY: 
+Milton Barroso, A01634505
+Andres Diaz, A01620020 
+Hector Alvarez, A01636166
+Ulises Bojorquez, A01114716
+Guillermo Tanamachi, A01631327
+Daniel Velazquez, A01636246
+"""
+
 from python_speech_features import mfcc, logfbank
 from scipy.io import wavfile
 import numpy as np
@@ -29,7 +41,6 @@ class HMMTrainer(object):
     def train(self, X):
         np.seterr(all='ignore')
         self.model.fit(X)
-        # Run the model on input data
 
     def get_score(self, input_data):
         return self.model.score(input_data)
@@ -37,34 +48,24 @@ class HMMTrainer(object):
 
 hmm_models = []
 input_folder = 'sonidos/'
-# Parse the input directory
 for dirname in os.listdir(input_folder):
-    # Get the name of the subfolder
     subfolder = os.path.join(input_folder, dirname)
     if not os.path.isdir(subfolder):
         continue
-    # Extract the label
     label = subfolder[subfolder.rfind('/') + 1:]
-    # Initialize variables
     X = np.array([])
     y_words = []
-    # Iterate through the audio files (leaving 1 file for testing in each class)
     for filename in [x for x in os.listdir(subfolder) if x.endswith('.wav')]:
-        # Read the input file
         filepath = os.path.join(subfolder, filename)
         sampling_freq, audio = wavfile.read(filepath)
-        # Extract MFCC features
         mfcc_features = mfcc(audio, sampling_freq, nfft=2400)
-        # Append to the variable X
         if len(X) == 0:
             X = mfcc_features
         else:
             X = np.append(X, mfcc_features, axis=0)
 
-        # Append the label
         y_words.append(label)
     # print('X.shape =', X.shape)
-    # Train and save HMM model
     hmm_trainer = HMMTrainer(n_components=4)
     hmm_trainer.train(X)
     hmm_models.append((hmm_trainer, label))
@@ -77,7 +78,6 @@ for dirname in os.listdir(input_folder):
     subfolder = os.path.join(input_folder, dirname)
     if not os.path.isdir(subfolder):
         continue
-    # Extract the label
     label_real = subfolder[subfolder.rfind('/') + 1:]
 
     for filename in [x for x in os.listdir(subfolder) if x.endswith('.wav')][:-1]:
@@ -104,9 +104,6 @@ def plot_confusion_matrix(cm, classes, normalize=False, title='Confusion matrix'
 
     if normalize:
         cm = cm.astype('float') / cm.sum(axis=1)[:, np.newaxis]
-        # print("Normalized confusion matrix")
-
-    # print(cm)
 
     plt.imshow(cm, interpolation='nearest', cmap=cmap)
     plt.title(title)
