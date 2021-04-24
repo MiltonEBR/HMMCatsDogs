@@ -10,6 +10,9 @@ import itertools
 import os
 import glob
 import random
+import warnings
+
+warnings.filterwarnings("ignore")
 
 
 class HMMTrainer(object):
