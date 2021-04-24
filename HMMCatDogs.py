@@ -1,7 +1,6 @@
 from python_speech_features import mfcc, logfbank
 from scipy.io import wavfile
 import numpy as np
-import pandas as pd
 import matplotlib.pyplot as plt
 from hmmlearn import hmm
 from sklearn.metrics import confusion_matrix
@@ -53,7 +52,6 @@ for dirname in os.listdir(input_folder):
     for filename in [x for x in os.listdir(subfolder) if x.endswith('.wav')]:
         # Read the input file
         filepath = os.path.join(subfolder, filename)
-        print(filepath)
         sampling_freq, audio = wavfile.read(filepath)
         # Extract MFCC features
         mfcc_features = mfcc(audio, sampling_freq, nfft=2400)
@@ -65,9 +63,9 @@ for dirname in os.listdir(input_folder):
 
         # Append the label
         y_words.append(label)
-    print('X.shape =', X.shape)
+    # print('X.shape =', X.shape)
     # Train and save HMM model
-    hmm_trainer = HMMTrainer(n_components=10)
+    hmm_trainer = HMMTrainer(n_components=4)
     hmm_trainer.train(X)
     hmm_models.append((hmm_trainer, label))
     hmm_trainer = None
@@ -106,11 +104,9 @@ def plot_confusion_matrix(cm, classes, normalize=False, title='Confusion matrix'
 
     if normalize:
         cm = cm.astype('float') / cm.sum(axis=1)[:, np.newaxis]
-        print("Normalized confusion matrix")
-    else:
-        print('Confusion matrix, without normalization')
+        # print("Normalized confusion matrix")
 
-    print(cm)
+    # print(cm)
 
     plt.imshow(cm, interpolation='nearest', cmap=cmap)
     plt.title(title)
